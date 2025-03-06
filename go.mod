@@ -1,6 +1,6 @@
 module github.com/cans-communication/hermes
 
-go 1.24.0
+go 1.20
 
 require github.com/nats-io/nats.go v1.39.1
 
