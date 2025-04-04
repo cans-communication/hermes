@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
@@ -64,7 +65,18 @@ func main() {
 	sub, err := c.Consume(func(msg jetstream.Msg) {
 		msg.Ack()
 
-		fmt.Println(string(msg.Data()))
+    var payload Message 
+    err := json.Unmarshal(msg.Data(), &payload)
+    if err != nil {
+      return
+    }
+
+    d, err := json.MarshalIndent(payload, " ", " ")
+    if err != nil {
+      return
+    }
+
+		fmt.Println(string(d))
 
 	})
 
