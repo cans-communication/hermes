@@ -65,16 +65,16 @@ func main() {
 	sub, err := c.Consume(func(msg jetstream.Msg) {
 		msg.Ack()
 
-    var payload Message 
-    err := json.Unmarshal(msg.Data(), &payload)
-    if err != nil {
-      return
-    }
+		var payload Message
+		err := json.Unmarshal(msg.Data(), &payload)
+		if err != nil {
+			return
+		}
 
-    d, err := json.MarshalIndent(payload, " ", " ")
-    if err != nil {
-      return
-    }
+		d, err := json.MarshalIndent(payload, " ", " ")
+		if err != nil {
+			return
+		}
 
 		fmt.Println(string(d))
 
