@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"time"
 
 	"github.com/cans-communication/hermes"
 	"github.com/kelseyhightower/envconfig"
@@ -21,12 +20,6 @@ type EnvCfg struct {
 	Stream     string `envconfig:"STREAM" required:"true"`
 	ConsumerID string `envconfig:"CONSUMER" required:"true"`
 	Subject    string `envconfig:"SUBJECT" required:"true"`
-}
-
-type Message struct {
-	Timestamp time.Time `json:"timestamp"`
-	ID        string    `json:"id"`
-	Msg       string    `json:"msg"`
 }
 
 func main() {
@@ -65,14 +58,16 @@ func main() {
 	sub, err := c.Consume(func(msg jetstream.Msg) {
 		msg.Ack()
 
-		var payload Message
+		var payload map[string]string
 		err := json.Unmarshal(msg.Data(), &payload)
 		if err != nil {
+			fmt.Println("unmarshal err: ", err.Error())
 			return
 		}
 
 		d, err := json.MarshalIndent(payload, " ", " ")
 		if err != nil {
+			fmt.Println("marshal err: ", err.Error())
 			return
 		}
 

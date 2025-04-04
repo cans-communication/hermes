@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/cans-communication/hermes"
-	"github.com/google/uuid"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -15,12 +13,6 @@ type EnvCfg struct {
 	User     string `envconfig:"USER" required:"true"`
 	Password string `envconfig:"PASSWORD" required:"true"`
 	Subject  string `envconfig:"SUBJECT" required:"true"`
-}
-
-type Message struct {
-	Timestamp time.Time `json:"timestamp"`
-	ID        string    `json:"id"`
-	Msg       string    `json:"msg"`
 }
 
 func main() {
@@ -48,13 +40,9 @@ func main() {
 	defer client.Close()
 
 	p := client.Producer()
-	err = p.ProduceAsyncJson(
+	err = p.ProduceAsync(
 		cfg.Subject,
-		&Message{
-			Timestamp: time.Now(),
-			ID:        uuid.New().String(),
-			Msg:       "Hello",
-		},
+		[]byte(`{"id":"1", "name": "alice"}`),
 	)
 
 	if err != nil {
